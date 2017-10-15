@@ -3,8 +3,10 @@ package com.iadmintech.sample.module.person.service;
 import com.iadmintech.sample.module.person.dao.PersonRepository;
 import com.iadmintech.sample.module.person.domain.PersonDto;
 import com.iadmintech.sample.module.person.domain.PersonEntity;
+import com.iadmintech.sample.module.person.exception.PersonDaoException;
 import com.iadmintech.sample.module.person.mapper.PersonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ public class PersonServiceImpl implements PersonService {
 
     private PersonRepository personRepository;
     private PersonMapper personMapper;
+
+    private final static String DAO_SAVE_EXCEPTION_MESSAGE = "An error occurred while attempting to persist your data.";
 
     @Autowired
     public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper){
@@ -39,10 +43,15 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonDto putPerson(PersonDto personDto) {
-        PersonEntity personEntity = personMapper.PersonDtoToPersonEntity(personDto);
-        PersonEntity returnPersonEntity = personRepository.save(personEntity);
-        PersonDto returnPersonDto = personMapper.personEntityToPersonDto(returnPersonEntity);
-        return returnPersonDto;
+    public PersonDto putPerson(PersonDto personDto) throws PersonDaoException{
+        try {
+            PersonEntity personEntity = personMapper.PersonDtoToPersonEntity(personDto);
+            personEntity.setCreationUserId("dummy");//TODO: Remove this and pull username from requestWrapper.
+            PersonEntity returnPersonEntity = personRepository.save(personEntity);
+            PersonDto returnPersonDto = personMapper.personEntityToPersonDto(returnPersonEntity);
+            return returnPersonDto;
+        } catch(DataAccessException e){
+            throw new PersonDaoException(DAO_SAVE_EXCEPTION_MESSAGE, e);
+        }
     }
 }

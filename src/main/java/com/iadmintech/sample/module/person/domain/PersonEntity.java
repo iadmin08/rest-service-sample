@@ -4,26 +4,33 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "PERSON")
 public class PersonEntity {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long personId;
+    @Column(name = "FIRST_NAME")
     private String firstName;
+    @Column(name = "LAST_NAME")
     private String lastName;
+    @Column(name = "AGE")
     private Integer age;
+    @Column(name = "BIRTH_DATE")
     private Date birthDate;
+    @Column(name = "CRE_USR_ID")
     private String creationUserId;
+    @Column(name = "CRE_TS", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
     private Timestamp creationTimestamp;
+    @Column(name = "UPDT_USR_ID")
     private String updateUserId;
+    @Column(name = "UPDT_TS")
     private Timestamp updateTimestamp;
 
     public PersonEntity(){
