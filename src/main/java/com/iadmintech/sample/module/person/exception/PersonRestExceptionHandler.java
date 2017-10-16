@@ -10,20 +10,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @RestControllerAdvice
 public class PersonRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PersonDaoException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    protected ResponseDtoWrapper<PersonDto> handlePersonDaoException(PersonDaoException pe) {
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage(pe.getMessage());
-        errorDto.setTimestamp(LocalDateTime.now());
-        errorDto.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
+    protected ResponseDtoWrapper<List<PersonDto>> handlePersonDaoException(PersonDaoException pe) {
+        ErrorDto errorDto = new ErrorDto(pe.getMessage());
+        List<ErrorDto> errors = new ArrayList<>();
+        errors.add(errorDto);
+        List<PersonDto> data = Collections.emptyList();
 
-        ResponseDtoWrapper<PersonDto> responseDtoWrapper = new ResponseDtoWrapper<>();
-        responseDtoWrapper.setError(errorDto);
+        ResponseDtoWrapper<List<PersonDto>> responseDtoWrapper = new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY, data, errors);
         return responseDtoWrapper;
     }
 
