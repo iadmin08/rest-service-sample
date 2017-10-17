@@ -1,11 +1,13 @@
 package com.iadmintech.sample.module.person.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.iadmintech.sample.module.common.domain.ErrorDto;
 import com.iadmintech.sample.module.common.domain.ResponseDtoWrapper;
 import com.iadmintech.sample.module.person.domain.PersonDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,7 +39,6 @@ public class PersonRestExceptionHandler extends ResponseEntityExceptionHandler {
         return responseDtoWrapper;
     }
 
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request){
         List<ObjectError> objectErrorList = ex.getBindingResult().getAllErrors();
@@ -53,6 +54,20 @@ public class PersonRestExceptionHandler extends ResponseEntityExceptionHandler {
                 globalErrorList.add(new ErrorDto.GlobalError(objectError.getDefaultMessage()));
             }
         }
+        ErrorDto error = new ErrorDto(globalErrorList, fieldErrorList);
+        List<PersonDto> data = Collections.emptyList();
+
+        ResponseDtoWrapper<List<PersonDto>> responseDtoWrapper = new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.BAD_REQUEST, data, error);
+        return new ResponseEntity<>(responseDtoWrapper, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    //TODO: prepare a better json response message for this scenario
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String message = ex.getRootCause().getMessage();
+        List<ErrorDto.GlobalError> globalErrorList = new ArrayList<>();
+        globalErrorList.add(new ErrorDto.GlobalError(message));
+        List<ErrorDto.FieldError> fieldErrorList = Collections.emptyList();
         ErrorDto error = new ErrorDto(globalErrorList, fieldErrorList);
         List<PersonDto> data = Collections.emptyList();
 

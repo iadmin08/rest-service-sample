@@ -21,9 +21,9 @@ public class RequestDtoWrapperValidator implements Validator{
     public void validate(Object o, Errors errors) {
         RequestDtoWrapper<PersonDto> requestDtoWrapper = (RequestDtoWrapper<PersonDto>) o;
         if(requestDtoWrapper.getData() == null){
-            errors.reject("Data is null");
+            errors.reject("Data is null", "The data attribute cannot be null.");
         } else if(!(requestDtoWrapper.getData() instanceof PersonDto)){
-            errors.reject("Data is malformed");
+            errors.reject("Data is malformed", "The data attribute is malformed.");
         } else {
             PersonDto personDto = requestDtoWrapper.getData();
             if (StringUtils.isEmpty(personDto.getFirstName())){
