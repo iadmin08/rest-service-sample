@@ -25,6 +25,7 @@ public class PersonRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PersonDaoException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    //TODO: Migrate this handler to the corresponding controller since it is controller specific. Or generalize this to work for any DAO Exception
     protected ResponseDtoWrapper<List<PersonDto>> handlePersonDaoException(PersonDaoException pe) {
         ErrorDto.GlobalError globalError = new ErrorDto.GlobalError(pe.getMessage());
         List<ErrorDto.GlobalError> globalErrorList = new ArrayList<>();
