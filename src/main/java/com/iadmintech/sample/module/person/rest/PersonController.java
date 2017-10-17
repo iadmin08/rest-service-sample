@@ -6,10 +6,13 @@ import com.iadmintech.sample.module.common.domain.ResponseDtoWrapper;
 import com.iadmintech.sample.module.person.domain.PersonDto;
 import com.iadmintech.sample.module.person.exception.PersonDaoException;
 import com.iadmintech.sample.module.person.service.PersonService;
+import com.iadmintech.sample.module.person.validation.RequestDtoWrapperValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,23 +28,25 @@ public class PersonController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public @ResponseBody ResponseDtoWrapper<List<PersonDto>> getPerson(){
         List<PersonDto> data = personService.readPersons();
-        List<ErrorDto> errors = Collections.emptyList();
-        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data, errors);
+        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data, null);
     }
 
     @RequestMapping(value = "/{personId}", method = RequestMethod.GET)
     public @ResponseBody ResponseDtoWrapper<List<PersonDto>> getPerson(@PathVariable("personId") Long personId){
         List<PersonDto> data = new ArrayList<>();
         data.add(personService.readPersons(personId));
-        List<ErrorDto> errors = Collections.emptyList();
-        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data,  errors);
+        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data,  null);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
-    public @ResponseBody ResponseDtoWrapper<List<PersonDto>> putPerson(@RequestBody RequestDtoWrapper<PersonDto> requestDtoWrapper) throws PersonDaoException {
+    public @ResponseBody ResponseDtoWrapper<List<PersonDto>> putPerson(@Valid @RequestBody RequestDtoWrapper<PersonDto> requestDtoWrapper) throws PersonDaoException {
         ArrayList<PersonDto> data = new ArrayList<>();
         data.add(personService.putPerson(requestDtoWrapper.getData()));
-        ArrayList<ErrorDto> errors = new ArrayList<>();
-        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data, errors);
+        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data, null);
+    }
+
+    @InitBinder("requestDtoWrapper")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(new RequestDtoWrapperValidator());
     }
 }

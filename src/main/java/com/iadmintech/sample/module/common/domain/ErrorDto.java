@@ -1,18 +1,76 @@
 package com.iadmintech.sample.module.common.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+
 public class ErrorDto {
 
-    private String message;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<GlobalError> globalErrors;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<FieldError> fieldErrors;
 
     public ErrorDto() {
         //Intentionally empty.
     }
 
-    public ErrorDto(String message) {
-        this.message = message;
+    public ErrorDto(List<GlobalError> globalErrors, List<FieldError> fieldErrors) {
+        this.globalErrors = globalErrors;
+        this.fieldErrors = fieldErrors;
     }
 
-    public String getMessage() {
-        return message;
+    public List<GlobalError> getGlobalErrors() {
+        return globalErrors;
+    }
+
+    public List<FieldError> getFieldErrors() {
+        return fieldErrors;
+    }
+
+    public static class FieldError {
+
+        private String field;
+        private String code;
+        private Object rejectedValue;
+
+        public FieldError() {
+        }
+
+        public FieldError(String field, String code, Object rejectedValue) {
+            this.field = field;
+            this.code = code;
+            this.rejectedValue = rejectedValue;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public Object getRejectedValue() {
+            return rejectedValue;
+        }
+    }
+
+    public static class GlobalError{
+
+        private String message;
+
+        public GlobalError() {
+
+        }
+
+        public GlobalError(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
     }
 }
