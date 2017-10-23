@@ -34,7 +34,10 @@ public class PersonController {
     @RequestMapping(value = "/{personId}", method = RequestMethod.GET)
     public @ResponseBody ResponseDtoWrapper<List<PersonDto>> getPerson(@PathVariable("personId") Long personId){
         List<PersonDto> data = new ArrayList<>();
-        data.add(personService.readPersons(personId));
+        PersonDto personDto = personService.readPersons(personId);
+        if(personDto != null) {
+            data.add(personDto);
+        }
         return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data,  null);
     }
 
