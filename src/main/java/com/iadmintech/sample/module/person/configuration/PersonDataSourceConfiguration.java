@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaRepositories(basePackageClasses=PersonRepository.class)
-@EntityScan(basePackages = "com.iadmintech.sample.module.person.domain")
+@EntityScan(basePackages = "com.iadmintech.sample.module.person.domain.entity")
 public class PersonDataSourceConfiguration {
 
 }

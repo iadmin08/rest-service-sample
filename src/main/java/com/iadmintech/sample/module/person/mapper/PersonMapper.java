@@ -1,7 +1,7 @@
 package com.iadmintech.sample.module.person.mapper;
 
-import com.iadmintech.sample.module.person.domain.PersonDto;
-import com.iadmintech.sample.module.person.domain.PersonEntity;
+import com.iadmintech.sample.module.person.domain.dto.PersonDto;
+import com.iadmintech.sample.module.person.domain.entity.PersonEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

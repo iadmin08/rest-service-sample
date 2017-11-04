@@ -1,6 +1,6 @@
 package com.iadmintech.sample.module.person.service;
 
-import com.iadmintech.sample.module.person.domain.PersonDto;
+import com.iadmintech.sample.module.person.domain.dto.PersonDto;
 import com.iadmintech.sample.module.person.exception.PersonDaoException;
 
 import java.util.List;

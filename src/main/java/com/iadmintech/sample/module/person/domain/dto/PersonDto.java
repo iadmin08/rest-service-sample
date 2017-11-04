@@ -1,52 +1,31 @@
-package com.iadmintech.sample.module.person.domain;
+package com.iadmintech.sample.module.person.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
-@Entity
-@Table(name = "PERSON")
-public class PersonEntity {
+public class PersonDto {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long personId;
-    @Column(name = "FIRST_NAME")
     private String firstName;
-    @Column(name = "LAST_NAME")
     private String lastName;
-    @Column(name = "AGE")
     private Integer age;
-    @Column(name = "BIRTH_DATE")
+    @JsonFormat(pattern="yyyy-MM-dd", timezone = "EST")
     private Date birthDate;
-    @Column(name = "CRE_USR_ID")
-    private String creationUserId;
-    @Column(name = "CRE_TS", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
-    private Timestamp creationTimestamp;
-    @Column(name = "UPDT_USR_ID")
-    private String updateUserId;
-    @Column(name = "UPDT_TS")
-    private Timestamp updateTimestamp;
 
-    public PersonEntity(){
+    public PersonDto(){
         //Intentionally empty.
     }
 
-    public PersonEntity(Long personId, String firstName, String lastName, Integer age, Date birthDate, String creationUserId, Timestamp creationTimestamp, String updateUserId, Timestamp updateTimestamp) {
+    public PersonDto(Long personId, String firstName, String lastName, Integer age, Date birthDate) {
         this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.birthDate = birthDate;
-        this.creationUserId = creationUserId;
-        this.creationTimestamp = creationTimestamp;
-        this.updateUserId = updateUserId;
-        this.updateTimestamp = updateTimestamp;
     }
 
     public Long getPersonId() {
@@ -89,40 +68,8 @@ public class PersonEntity {
         this.birthDate = birthDate;
     }
 
-    public String getCreationUserId() {
-        return creationUserId;
-    }
-
-    public void setCreationUserId(String creationUserId) {
-        this.creationUserId = creationUserId;
-    }
-
-    public Timestamp getCreationTimestamp() {
-        return creationTimestamp;
-    }
-
-    public void setCreationTimestamp(Timestamp creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
-    }
-
-    public String getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(String updateUserId) {
-        this.updateUserId = updateUserId;
-    }
-
-    public Timestamp getUpdateTimestamp() {
-        return updateTimestamp;
-    }
-
-    public void setUpdateTimestamp(Timestamp updateTimestamp) {
-        this.updateTimestamp = updateTimestamp;
-    }
-
     public int hashcode(){
-        return new HashCodeBuilder(5,7).
+        return new HashCodeBuilder(1,3).
                 append(personId).
                 append(firstName).
                 append(lastName).
@@ -153,10 +100,6 @@ public class PersonEntity {
                 append("lastName", lastName).
                 append("age", age).
                 append("birthDate", birthDate).
-                append("creationUserId", creationUserId).
-                append("creationTimestamp", creationTimestamp).
-                append("updateUserId", updateUserId).
-                append("updateTimestamp", updateTimestamp).
                 toString();
     }
 }

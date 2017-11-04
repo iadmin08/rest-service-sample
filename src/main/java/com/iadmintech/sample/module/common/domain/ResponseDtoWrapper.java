@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class ResponseDtoWrapper<D> extends DtoWrapper<D> {
+public abstract class ResponseDtoWrapper{
 
     private HttpStatus status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
@@ -19,8 +18,7 @@ public class ResponseDtoWrapper<D> extends DtoWrapper<D> {
         //Intentionally empty.
     }
 
-    public ResponseDtoWrapper(LocalDateTime timestamp, HttpStatus status, D data, ErrorDto error){
-        super(data);
+    public ResponseDtoWrapper(LocalDateTime timestamp, HttpStatus status, ErrorDto error){
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;

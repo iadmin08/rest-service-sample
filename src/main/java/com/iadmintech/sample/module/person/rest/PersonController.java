@@ -1,12 +1,11 @@
 package com.iadmintech.sample.module.person.rest;
 
-import com.iadmintech.sample.module.common.domain.ErrorDto;
-import com.iadmintech.sample.module.common.domain.RequestDtoWrapper;
-import com.iadmintech.sample.module.common.domain.ResponseDtoWrapper;
-import com.iadmintech.sample.module.person.domain.PersonDto;
+import com.iadmintech.sample.module.person.domain.dto.PersonDto;
+import com.iadmintech.sample.module.person.domain.dto.PersonDtoRequestWrapper;
+import com.iadmintech.sample.module.person.domain.dto.PersonDtoResponseWrapper;
 import com.iadmintech.sample.module.person.exception.PersonDaoException;
 import com.iadmintech.sample.module.person.service.PersonService;
-import com.iadmintech.sample.module.person.validation.RequestDtoWrapperValidator;
+import com.iadmintech.sample.module.person.validation.PersonDtoRequestWrapperValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,41 +14,42 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/persons")
+//TODO: Make all response consistent such that all fields are always returned with appropriate value.
 public class PersonController {
 
     @Autowired
     PersonService personService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public @ResponseBody ResponseDtoWrapper<List<PersonDto>> getPerson(){
+    public @ResponseBody
+    PersonDtoResponseWrapper getPerson(){
         List<PersonDto> data = personService.readPersons();
-        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data, null);
+        return new PersonDtoResponseWrapper(data, LocalDateTime.now(), HttpStatus.OK, null);
     }
 
     @RequestMapping(value = "/{personId}", method = RequestMethod.GET)
-    public @ResponseBody ResponseDtoWrapper<List<PersonDto>> getPerson(@PathVariable("personId") Long personId){
+    public @ResponseBody PersonDtoResponseWrapper getPerson(@PathVariable("personId") Long personId){
         List<PersonDto> data = new ArrayList<>();
         PersonDto personDto = personService.readPersons(personId);
         if(personDto != null) {
             data.add(personDto);
         }
-        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data,  null);
+        return new PersonDtoResponseWrapper(data, LocalDateTime.now(), HttpStatus.OK,  null);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
-    public @ResponseBody ResponseDtoWrapper<List<PersonDto>> putPerson(@Valid @RequestBody RequestDtoWrapper<PersonDto> requestDtoWrapper) throws PersonDaoException {
+    public @ResponseBody PersonDtoResponseWrapper putPerson(@Valid @RequestBody PersonDtoRequestWrapper personDtoRequestWrapper) throws PersonDaoException {
         ArrayList<PersonDto> data = new ArrayList<>();
-        data.add(personService.putPerson(requestDtoWrapper.getData()));
-        return new ResponseDtoWrapper<>(LocalDateTime.now(), HttpStatus.OK, data, null);
+        data.add(personService.putPerson(personDtoRequestWrapper.getData()));
+        return new PersonDtoResponseWrapper(data, LocalDateTime.now(), HttpStatus.OK, null);
     }
 
-    @InitBinder("requestDtoWrapper")
+    @InitBinder("personDtoRequestWrapper")
     protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(new RequestDtoWrapperValidator());
+        binder.addValidators(new PersonDtoRequestWrapperValidator());
     }
 }

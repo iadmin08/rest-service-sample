@@ -1,8 +1,8 @@
 package com.iadmintech.sample.module.person.service;
 
 import com.iadmintech.sample.module.person.dao.PersonRepository;
-import com.iadmintech.sample.module.person.domain.PersonDto;
-import com.iadmintech.sample.module.person.domain.PersonEntity;
+import com.iadmintech.sample.module.person.domain.dto.PersonDto;
+import com.iadmintech.sample.module.person.domain.entity.PersonEntity;
 import com.iadmintech.sample.module.person.exception.PersonDaoException;
 import com.iadmintech.sample.module.person.mapper.PersonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
