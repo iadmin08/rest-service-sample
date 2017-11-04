@@ -6,9 +6,9 @@ import java.util.List;
 
 public class ErrorDto {
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<GlobalError> globalErrors;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<FieldError> fieldErrors;
 
     public ErrorDto() {
